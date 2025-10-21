@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.geom.*;
+import java.util.Random;
 
 /**
  * Class BoxBall - a graphical ball that moves similar to the ball in PONG.
@@ -18,14 +19,14 @@ import java.awt.geom.*;
  * @author David J. Barnes
  * @author Bruce Quig
  * @author William Crosbie
+ * @author Jimmy Arias
  *
- * @version 2025.10.06
+ * @version 2025.10.20
  */
 
 public class BoxBall
 {
     private Box myBox;
-
     private Ellipse2D.Double circle;    // represents the ball
     private Color color;        // color of the ball (can be rgb value)
     private int diameter;       // width of ball in number of pixels
@@ -52,8 +53,15 @@ public class BoxBall
         yPosition = yPos;
         color = ballColor;
         diameter = ballDiameter;
-
+        myBox = box;
         canvas = drawingCanvas;
+        
+        Random rand = new Random();
+    
+        do{
+            xSpeed = rand.nextInt(7)-3;
+            ySpeed = rand.nextInt(7)-3;
+        }while (xSpeed ==0 || ySpeed == 0);
     }
 
     /**
@@ -80,12 +88,22 @@ public class BoxBall
     {
         // remove from canvas at the current position
         erase();
-            
-        // compute new position
-  
+        
+        // compute new position   
+        xPosition += xSpeed;
+        yPosition += ySpeed;
+        
         // figure out if it has hit the left or right wall
+        if (xPosition <= myBox.getLeftWall() || xPosition >= myBox.getRightWall() -diameter) 
+        {
+            xSpeed = -xSpeed;
+        }
         
         // figure out if it has hit the top or bottom wall
+        if (yPosition <= myBox.getTopWall() || yPosition >= myBox.getBottomWall() -diameter) 
+        {
+            ySpeed = -ySpeed;
+        }
         
         draw();
     }    

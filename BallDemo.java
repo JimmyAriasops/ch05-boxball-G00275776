@@ -1,11 +1,12 @@
 import java.awt.Color;
+import java.util.Random;
 
 /**
  * Class BallDemo - a short demonstration showing animation with the 
  * Canvas class. 
  *
- * @author Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author Jimmy Arais
+* @version 2025.10.20
  */
 
 public class BallDemo   
@@ -26,13 +27,37 @@ public class BallDemo
     }
 
     /**
-     * boxBounce - simulate 5-50 balls bouncing within a box
+     * boxBounce - simulate 5-30 balls bouncing within a box
      * 
      * @param numOfBalls number of balls to simulate bouncing, clamped between 5-50. 
      */
-    public void boxBounce()
+    public void boxBounce(int numOfBalls)
     {
-        // you must implement this
+        if (numOfBalls < 5 || numOfBalls > 30) {
+            System.out.println("Please enter a number within 5 and 30");
+            return;
+        }// you must implement this
+        
+        myCanvas.setVisible(true);
+        Random rand = new Random();
+        BoxBall [] balls = new BoxBall [numOfBalls];
+        
+        for (int i = 0; i < numOfBalls; i++) {
+            int diameter = 20;
+            int xPos = rand.nextInt(box.getRightWall()- box.getLeftWall()- diameter) + box.getLeftWall();
+            int yPos = rand.nextInt(box.getBottomWall()- box.getTopWall()- diameter) + box.getTopWall();
+            Color color = new Color(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256));
+            balls[i] = new BoxBall(xPos, yPos, diameter, color, box, myCanvas);
+            balls[i].draw();
+        }
+        while (true)
+        {
+            myCanvas.wait(20);
+            box.draw();        // Redraw missing parts of box each frame 
+            for(BoxBall ball : balls) {
+                ball.move();
+            }
+        }
     }
     
     /**
